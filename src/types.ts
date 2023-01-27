@@ -3,9 +3,9 @@
   @author Evgeny Dolganov <evgenij.dolganov@gmail.com>
 */
 
-export interface ProviderLike {
+export interface RawProvider {
   /**
-   * Sends a raw request to the JSON RPC server.
+   * Sends a raw request by wallet's raw provider itself
    */
   request(options: SendOptions): Promise<any>,
 }

@@ -3,8 +3,8 @@
   @author Evgeny Dolganov <evgenij.dolganov@gmail.com>
 */
 
-import Web3 from 'web3';
 
+import {RawProvider} from './types';
 
 export interface Web3ApiListener {
   onConnected?(): void,
@@ -19,8 +19,6 @@ export interface Web3Api {
 
   removeListener(listener: Web3ApiListener): void,
 
-  web3(): Web3,
-
   name(): string,
 
   hasWallet(): boolean,
@@ -30,6 +28,10 @@ export interface Web3Api {
   connect(): Promise<void>,
 
   getAddress(): Promise<string>,
+
+  getChainId(): Promise<number>,
+
+  getRawProvider(): RawProvider,
 
   disconnect(): Promise<void>,
 }
