@@ -6,20 +6,6 @@
 import Web3 from 'web3';
 
 
-let currentApi: Web3Api;
-
-export const Web3ApiHolder = {
-
-  current(){
-    return currentApi;
-  },
-
-  setCurrent(web3Api: Web3Api){
-    currentApi = web3Api;
-  }
-};
-
-
 export interface Web3ApiListener {
   onConnected?(): void,
   onAccountsChanged?(newAddress: string): void;
