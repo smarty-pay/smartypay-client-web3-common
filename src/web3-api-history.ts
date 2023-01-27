@@ -3,12 +3,11 @@
   @author Evgeny Dolganov <evgenij.dolganov@gmail.com>
 */
 
-
-const storeKey = 'smartypay-last-connected-wallet';
+const StoreKey = 'smartypay-last-connected-wallet';
 
 export function storeLastWeb3ApiName(name: string){
   try {
-    window.localStorage.setItem(storeKey, name);
+    window.localStorage.setItem(StoreKey, name);
   } catch (e){
     // ignore
   }
@@ -16,7 +15,7 @@ export function storeLastWeb3ApiName(name: string){
 
 export function getLastWeb3ApiName(): string {
   try {
-    return window.localStorage.getItem(storeKey) || '';
+    return window.localStorage.getItem(StoreKey) || '';
   } catch (e){
     return '';
   }
@@ -25,7 +24,7 @@ export function getLastWeb3ApiName(): string {
 
 export function clearLastWeb3ApiName(){
   try {
-    window.localStorage.setItem(storeKey, '');
+    window.localStorage.setItem(StoreKey, '');
   } catch (e){
     // ignore
   }
