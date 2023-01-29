@@ -6,18 +6,19 @@
 
 import {RawProvider} from './types';
 
-export interface Web3ApiListener {
-  onConnected?(): void,
-  onAccountsChanged?(newAddress: string): void;
-  onDisconnectedByRemote?(): void;
-}
+
+export type Web3ApiEvent =
+  'connecting'
+  | 'connected'
+  | 'accountsChanged'
+  | 'disconnected';
 
 
 export interface Web3Api {
 
-  addListener(listener: Web3ApiListener): void,
+  addListener(event:Web3ApiEvent, listener: (...args: any[])=>void): void,
 
-  removeListener(listener: Web3ApiListener): void,
+  removeListener(listener: (...args: any[])=>void): void,
 
   name(): string,
 
