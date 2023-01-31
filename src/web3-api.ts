@@ -40,6 +40,8 @@ export interface Web3Api {
 
 export interface Web3ApiProvider {
 
+  name(): string,
+
   makeWeb3Api(...args: any[]): Web3Api;
 
 }
