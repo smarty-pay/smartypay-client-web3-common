@@ -9,6 +9,8 @@ import {Web3Subscriptions} from './Web3Subscriptions';
 import {
   Web3Api,
   Web3ApiEvent,
+  Web3ApiProvider,
+  MakeWeb3ApiOpt,
 } from './web3-api';
 import {
   storeLastWeb3ApiName,
@@ -22,6 +24,8 @@ export {
   Web3Subscriptions,
   Web3Api,
   Web3ApiEvent,
+  Web3ApiProvider,
+  MakeWeb3ApiOpt,
   storeLastWeb3ApiName,
   getLastWeb3ApiName,
   clearLastWeb3ApiName,

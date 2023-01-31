@@ -17,17 +17,3 @@ export interface SendOptions {
   id?: number;
   jsonrpc?: string;
 }
-
-
-let useLogs = true;
-
-export const UseLogs = {
-
-  setUseLogs(val: boolean){
-    useLogs = val;
-  },
-
-  useLogs(){
-    return useLogs;
-  },
-}

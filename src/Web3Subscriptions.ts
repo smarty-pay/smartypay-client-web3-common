@@ -5,7 +5,7 @@
 
 import {SubscriptionABI, Token} from 'smartypay-client-model';
 import {Web3Common} from './Web3Common';
-import {UseLogs} from './types';
+import {UseLogs} from './util';
 import {Web3Api} from './web3-api';
 import {ethers} from 'ethers';
 

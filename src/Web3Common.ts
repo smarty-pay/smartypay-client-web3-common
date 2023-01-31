@@ -4,10 +4,10 @@
 */
 
 import {Blockchains, Erc20ABI, Network, Token} from 'smartypay-client-model';
-import {UseLogs} from './types';
+import {UseLogs} from './util';
 import {ethers} from 'ethers';
 import {Web3Api} from './web3-api';
-import {JsonProvidersManager} from './JsonProvidersManager';
+import {JsonProvidersManager} from './util/JsonProvidersManager';
 
 /**
  * Common API for all blockchains and wallets

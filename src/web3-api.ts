@@ -5,13 +5,14 @@
 
 
 import {RawProvider} from './types';
+import {util} from 'smartypay-client-model';
 
 
 export type Web3ApiEvent =
-  'connecting'
-  | 'connected'
-  | 'accountsChanged'
-  | 'disconnected';
+  'wallet-connected'
+  | 'wallet-account-changed'
+  | 'wallet-network-changed'
+  | 'wallet-disconnected';
 
 
 export interface Web3Api {
@@ -35,4 +36,15 @@ export interface Web3Api {
   getRawProvider(): RawProvider,
 
   disconnect(): Promise<void>,
+}
+
+
+export interface MakeWeb3ApiOpt {
+  listeners?: util.ListenersMap<any>,
+}
+
+export interface Web3ApiProvider {
+
+  makeWeb3Api(req: MakeWeb3ApiOpt): Web3Api;
+
 }
