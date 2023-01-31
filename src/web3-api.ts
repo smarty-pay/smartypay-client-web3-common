@@ -5,7 +5,6 @@
 
 
 import {RawProvider} from './types';
-import {util} from 'smartypay-client-model';
 
 
 export type Web3ApiEvent =
@@ -39,12 +38,8 @@ export interface Web3Api {
 }
 
 
-export interface MakeWeb3ApiOpt {
-  listeners?: util.ListenersMap<any>,
-}
-
 export interface Web3ApiProvider {
 
-  makeWeb3Api(req: MakeWeb3ApiOpt): Web3Api;
+  makeWeb3Api(...args: any[]): Web3Api;
 
 }
