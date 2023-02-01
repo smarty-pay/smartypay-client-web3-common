@@ -81,6 +81,18 @@ export const Web3Common = {
     if(UseLogs.useLogs()){
       console.log('wallet switch network result', result);
     }
+  },
+
+  /**
+   * See chars registers:
+   * <pre>
+   * "0x14186c8215985f33845722730c6382443bf9ec65"
+   * ->
+   * "0x14186C8215985f33845722730c6382443Bf9EC65"
+   * </pre>
+   */
+  getNormalAddress(address: string){
+    return ethers.utils.getAddress(address);
   }
 
 }
