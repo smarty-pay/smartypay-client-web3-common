@@ -42,6 +42,8 @@ export interface Web3ApiProvider {
 
   name(): string,
 
-  makeWeb3Api(...args: any[]): Web3Api;
+  hasWallet(): boolean,
+
+  makeWeb3Api(...args: any[]): Web3Api,
 
 }
