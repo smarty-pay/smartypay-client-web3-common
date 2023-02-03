@@ -22,7 +22,7 @@
   },
   "dependencies": {
     "ethers": "^5.7.2",
-    "smartypay-client-model": "2.0.0"
+    "smartypay-client-model": "^2.0.0"
   },
   "devDependencies": {
     "@types/jest": "^26.0.21",
