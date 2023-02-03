@@ -19,7 +19,7 @@ export type WalletApiEvent =
 
 export class WalletApi<EventKey> {
 
-  private listeners = new util.ListenersMap<WalletApiEvent>();
+  protected listeners = new util.ListenersMap<WalletApiEvent>();
   protected lockOperation: string|undefined;
 
   // wallet state
@@ -44,8 +44,8 @@ export class WalletApi<EventKey> {
     this.listeners.removeListener(listener);
   }
 
-  protected getListeners(): util.ListenersMap<EventKey>{
-    return this.listeners as any;
+  protected fireEvent(key: EventKey, ...args: any[]){
+    this.listeners.fireEvent(key as any, ...args);
   }
 
   async connectToWallet(provider: Web3ApiProvider){
