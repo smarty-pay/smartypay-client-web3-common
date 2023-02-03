@@ -5,7 +5,6 @@
 
 import {RawProvider, TokenMaxAbsoluteAmount, TokenZeroAmount} from './types';
 import {Web3Common} from './Web3Common';
-import {Web3Subscriptions} from './Web3Subscriptions';
 import {
   Web3Api,
   Web3ApiEvent,
@@ -21,7 +20,6 @@ import {
 export {
   RawProvider,
   Web3Common,
-  Web3Subscriptions,
   Web3Api,
   Web3ApiEvent,
   Web3ApiProvider,
