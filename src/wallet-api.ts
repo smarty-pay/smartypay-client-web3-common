@@ -31,11 +31,15 @@ export class WalletApi<EventKey> {
 
   constructor(public readonly name: string) {}
 
-  addListener(event: WalletApiEvent, listener: (...args: any[])=>void){
+  addListener(event: WalletApiEvent, listener: util.EventListener){
     this.listeners.addListener(event, listener);
   }
 
-  removeListener(listener: (...args: any[])=>void){
+  addGlobalListener(listener: util.EventListener){
+    this.listeners.addGlobalListener(listener);
+  }
+
+  removeListener(listener: util.EventListener){
     this.listeners.removeListener(listener);
   }
 
