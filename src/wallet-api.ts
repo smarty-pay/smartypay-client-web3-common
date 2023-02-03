@@ -11,6 +11,7 @@ import {clearLastWeb3ApiName, getLastWeb3ApiName, storeLastWeb3ApiName} from './
 export type WalletApiEvent =
   Web3ApiEvent
   | 'wallet-connecting'
+  | 'blockchain-transaction'
   | 'api-locked'
   | 'api-unlocked'
   | 'api-error';
