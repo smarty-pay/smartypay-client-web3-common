@@ -6,18 +6,19 @@
 
 import {RawProvider} from './types';
 
-export interface Web3ApiListener {
-  onConnected?(): void,
-  onAccountsChanged?(newAddress: string): void;
-  onDisconnectedByRemote?(): void;
-}
+
+export type Web3ApiEvent =
+  'wallet-connected'
+  | 'wallet-account-changed'
+  | 'wallet-network-changed'
+  | 'wallet-disconnected';
 
 
 export interface Web3Api {
 
-  addListener(listener: Web3ApiListener): void,
+  addListener(event:Web3ApiEvent, listener: (...args: any[])=>void): void,
 
-  removeListener(listener: Web3ApiListener): void,
+  removeListener(listener: (...args: any[])=>void): void,
 
   name(): string,
 
@@ -34,4 +35,15 @@ export interface Web3Api {
   getRawProvider(): RawProvider,
 
   disconnect(): Promise<void>,
+}
+
+
+export interface Web3ApiProvider {
+
+  name(): string,
+
+  hasWallet(): boolean,
+
+  makeWeb3Api(...args: any[]): Web3Api,
+
 }

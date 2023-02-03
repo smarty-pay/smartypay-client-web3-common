@@ -3,6 +3,9 @@
   @author Evgeny Dolganov <evgenij.dolganov@gmail.com>
 */
 
+export const TokenMaxAbsoluteAmount = '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff';
+export const TokenZeroAmount = '0x0';
+
 export interface RawProvider {
   /**
    * Sends a raw request by wallet's raw provider itself
@@ -19,15 +22,6 @@ export interface SendOptions {
 }
 
 
-let useLogs = true;
-
-export const UseLogs = {
-
-  setUseLogs(val: boolean){
-    useLogs = val;
-  },
-
-  useLogs(){
-    return useLogs;
-  },
+export interface TxReqProp {
+  waitConfirms?: number
 }
