@@ -4,6 +4,7 @@
 */
 
 export const TokenMaxAbsoluteAmount = '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff';
+export const TokenZeroAmount = '0x0';
 
 export interface RawProvider {
   /**

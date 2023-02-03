@@ -3,7 +3,7 @@
   @author Evgeny Dolganov <evgenij.dolganov@gmail.com>
 */
 
-import {Blockchains, Erc20ABI, Network, Token} from 'smartypay-client-model';
+import {Blockchains, abi, Network, Token} from 'smartypay-client-model';
 import {UseLogs} from './util';
 import {ethers} from 'ethers';
 import {Web3Api} from './web3-api';
@@ -30,7 +30,7 @@ export const Web3Common = {
     // readonly methods can be called without wallet
     const provider = JsonProvidersManager.getProvider(rpc);
 
-    const contract = new ethers.Contract(tokenId, Erc20ABI, provider);
+    const contract = new ethers.Contract(tokenId, abi.Erc20ABI, provider);
     const balance = await contract.balanceOf(ownerAddress);
     return ethers.utils.formatUnits(balance, decimals);
   },
@@ -43,9 +43,18 @@ export const Web3Common = {
     // readonly methods can be called without wallet
     const provider = JsonProvidersManager.getProvider(rpc);
 
-    const contract = new ethers.Contract(tokenId, Erc20ABI, provider);
+    const contract = new ethers.Contract(tokenId, abi.Erc20ABI, provider);
     const allowance = await contract.allowance(ownerAddress, spenderAddress);
     return ethers.utils.formatUnits(allowance, decimals);
+  },
+
+  async getContractForWallet(
+    web3Api: Web3Api,
+    contractAddress: string,
+    abi: any,
+  ){
+    const provider = new ethers.providers.Web3Provider(web3Api.getRawProvider() as any);
+    return new ethers.Contract(contractAddress, abi, provider.getSigner());
   },
 
   async walletTokenApprove(
@@ -61,7 +70,7 @@ export const Web3Common = {
     const {tokenId} = token;
 
     const provider = new ethers.providers.Web3Provider(web3Api.getRawProvider() as any);
-    const contract = new ethers.Contract(tokenId, Erc20ABI, provider.getSigner());
+    const contract = new ethers.Contract(tokenId, abi.Erc20ABI, provider.getSigner());
 
     // call tx
     const txResp = await contract.approve(spenderAddress, approveAbsoluteAmount);

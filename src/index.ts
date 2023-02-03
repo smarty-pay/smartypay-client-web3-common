@@ -3,7 +3,7 @@
   @author Evgeny Dolganov <evgenij.dolganov@gmail.com>
 */
 
-import {RawProvider, TokenMaxAbsoluteAmount} from './types';
+import {RawProvider, TokenMaxAbsoluteAmount, TokenZeroAmount} from './types';
 import {Web3Common} from './Web3Common';
 import {Web3Subscriptions} from './Web3Subscriptions';
 import {
@@ -29,5 +29,6 @@ export {
   getLastWeb3ApiName,
   clearLastWeb3ApiName,
   TokenMaxAbsoluteAmount,
+  TokenZeroAmount,
   wallet,
 }
