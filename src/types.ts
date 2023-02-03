@@ -3,6 +3,8 @@
   @author Evgeny Dolganov <evgenij.dolganov@gmail.com>
 */
 
+export const TokenMaxAbsoluteAmount = '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff';
+
 export interface RawProvider {
   /**
    * Sends a raw request by wallet's raw provider itself
@@ -16,4 +18,9 @@ export interface SendOptions {
   params: any[];
   id?: number;
   jsonrpc?: string;
+}
+
+
+export interface TxReqProp {
+  waitConfirms?: number
 }

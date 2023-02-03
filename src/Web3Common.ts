@@ -4,13 +4,14 @@
 */
 
 import {Blockchains, Erc20ABI, Network, Token} from 'smartypay-client-model';
-import {TxReqProp, UseLogs} from './util';
+import {UseLogs} from './util';
 import {ethers} from 'ethers';
 import {Web3Api} from './web3-api';
 import {JsonProvidersManager} from './util/JsonProvidersManager';
+import {TxReqProp} from './types';
 
 
-const DefaultTxConfirms = 8;
+const DefaultTxConfirms = 1;
 
 /**
  * Common API for all blockchains and wallets
