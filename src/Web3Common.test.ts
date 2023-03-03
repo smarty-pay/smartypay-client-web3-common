@@ -63,6 +63,12 @@ describe('Web3Common', ()=>{
       const absoluteForm = ethers.utils.parseUnits(doubleForm, Assets.pmUSDT.decimals);
       expect(absoluteForm.gt(zero)).toBe(true);
     });
+
+    test('should support gUSDC', async ()=>{
+      const doubleForm = await Web3Common.getTokenBalance(Assets.gUSDC, address);
+      const absoluteForm = ethers.utils.parseUnits(doubleForm, Assets.gUSDC.decimals);
+      expect(absoluteForm.gt(zero)).toBe(true);
+    });
   });
 
 

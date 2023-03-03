@@ -98,7 +98,30 @@ export const Web3Common = {
 
     const {chainIdHex, chainName, native, rpc, explorer} = Blockchains[network];
 
-    const result = await web3Api.getRawProvider().request({
+    const provider = web3Api.getRawProvider();
+
+    // try to switch to existing network in wallet:
+    try {
+
+      const result = await provider.request({
+        method: 'wallet_switchEthereumChain',
+        params: [{
+          chainId: chainIdHex
+        }]
+      });
+
+      // success
+      if(UseLogs.useLogs()) {
+        console.log('wallet switch to existing network result', result);
+      }
+      return;
+
+    } catch (e){
+      // skip
+    }
+
+    // next: try to add network to wallet:
+    const result = await provider.request({
       method: 'wallet_addEthereumChain',
       params: [{
         chainId: chainIdHex,
