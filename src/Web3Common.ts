@@ -116,8 +116,14 @@ export const Web3Common = {
       }
       return;
 
-    } catch (e){
-      // skip
+    } catch (e: any){
+
+      const msg: string = e.message || e.toString() || '';
+
+      // no need to continue
+      if(msg.toLowerCase().includes('user rejected')){
+        throw e;
+      }
     }
 
     // next: try to add network to wallet:
