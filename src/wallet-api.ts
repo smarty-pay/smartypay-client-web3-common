@@ -3,9 +3,10 @@
   @author Evgeny Dolganov <evgenij.dolganov@gmail.com>
 */
 
-import {util} from 'smartypay-client-model';
+import {util, Token, Network, Currency} from 'smartypay-client-model';
 import {Web3Api, Web3ApiEvent, Web3ApiProvider} from './web3-api';
 import {clearLastWeb3ApiName, getLastWeb3ApiName, storeLastWeb3ApiName} from './web3-api-history';
+import {Web3Common} from './Web3Common';
 
 
 export type WalletApiEvent =
@@ -103,6 +104,34 @@ export class WalletApi<EventKey> {
         this.listeners.fireEvent('wallet-connecting', false);
       }
     });
+  }
+
+  async switchWalletToAssetNetwork(token: Token){
+    await this.useApiLock('switchWalletToAssetNetwork', async ()=>{
+      const wallet = this.getActiveWallet();
+      await Web3Common.switchWalletToAssetNetwork(wallet, token);
+    })
+  }
+
+  async switchWalletToNetwork(network: Network){
+    await this.useApiLock('switchWalletToNetwork', async ()=>{
+      const wallet = this.getActiveWallet();
+      await Web3Common.switchWalletToNetwork(wallet, network);
+    })
+  }
+
+  async addCurrencyTokenToWallet(currency: Currency) {
+    await this.useApiLock('addCurrencyTokenToWallet', async ()=>{
+      const wallet = this.getActiveWallet();
+      await Web3Common.addCurrencyTokenToWallet(wallet, currency);
+    })
+  }
+
+  async addTokenToWallet(token: Token) {
+    await this.useApiLock('addTokenToWallet', async ()=>{
+      const wallet = this.getActiveWallet();
+      await Web3Common.addTokenToWallet(wallet, token);
+    })
   }
 
   getOldConnectedWallet(){
