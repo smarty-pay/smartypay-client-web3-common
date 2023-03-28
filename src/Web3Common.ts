@@ -159,6 +159,9 @@ export const Web3Common = {
 
   async addTokenToWallet(web3Api: Web3Api, token: Token) {
 
+    // need to use target network first
+    await Web3Common.switchWalletToNetwork(web3Api, token.network);
+
     const provider = web3Api.getRawProvider();
 
     try {
