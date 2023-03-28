@@ -168,14 +168,14 @@ export const Web3Common = {
 
       await provider.request({
         method: 'wallet_watchAsset',
-        params: [{
+        params: {
           type: 'ERC20',
           options: {
             address: token.tokenId,
             symbol: token.abbr,
             decimals: token.decimals,
           },
-        }],
+        } as any,
       });
 
       if(UseLogs.useLogs()) {
