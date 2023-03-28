@@ -3,7 +3,7 @@
   @author Evgeny Dolganov <evgenij.dolganov@gmail.com>
 */
 
-import {Blockchains, abi, Network, Token} from 'smartypay-client-model';
+import {Blockchains, abi, Network, Token, Currency, Assets} from 'smartypay-client-model';
 import {UseLogs} from './util';
 import {ethers} from 'ethers';
 import {Web3Api} from './web3-api';
@@ -80,23 +80,22 @@ export const Web3Common = {
   },
 
   async switchWalletToAssetNetwork(web3Api: Web3Api, token: Token){
-
-    const {network} = token;
-    const {chainIdHex, chainId} = Blockchains[network];
-
-    const walletChainId = await web3Api.getChainId();
-    if(walletChainId !== chainId){
-      if(UseLogs.useLogs()) {
-        console.log('switch wallet network', {from: walletChainId, to: chainIdHex});
-      }
-      await Web3Common.switchWalletToNetwork(web3Api, network);
-    }
+    await Web3Common.switchWalletToNetwork(web3Api, token.network);
   },
 
 
   async switchWalletToNetwork(web3Api: Web3Api, network: Network){
 
-    const {chainIdHex, chainName, native, rpc, explorer} = Blockchains[network];
+    const {chainId, chainIdHex, chainName, native, rpc, explorer} = Blockchains[network];
+
+    const walletChainId = await web3Api.getChainId();
+    if(walletChainId === chainId){
+      return;
+    }
+
+    if(UseLogs.useLogs()) {
+      console.log('switch wallet network', {from: walletChainId, to: chainId});
+    }
 
     const provider = web3Api.getRawProvider();
 
@@ -144,6 +143,46 @@ export const Web3Common = {
 
     if(UseLogs.useLogs()){
       console.log('wallet switch network result', result);
+    }
+  },
+
+  async addCurrencyTokenToWallet(web3Api: Web3Api, currency: Currency) {
+    const token = (Assets as any)[currency] as Token|undefined;
+    if(token){
+      await this.addTokenToWallet(web3Api, token);
+    } else {
+      if(UseLogs.useLogs()){
+        console.log('cannot add unknown token', currency);
+      }
+    }
+  },
+
+  async addTokenToWallet(web3Api: Web3Api, token: Token) {
+
+    const provider = web3Api.getRawProvider();
+
+    try {
+
+      await provider.request({
+        method: 'wallet_watchAsset',
+        params: [{
+          type: 'ERC20',
+          options: {
+            address: token.tokenId,
+            symbol: token.abbr,
+            decimals: token.decimals,
+          },
+        }],
+      });
+
+      if(UseLogs.useLogs()) {
+        console.log('added token', token.abbr);
+      }
+
+    } catch (e: any){
+      if(UseLogs.useLogs()){
+        console.log('cannot add token', e.message || e.toString());
+      }
     }
   },
 
