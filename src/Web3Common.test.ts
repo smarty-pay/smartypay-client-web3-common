@@ -14,6 +14,21 @@ describe('Web3Common', ()=>{
 
   const zero = BigNumber.from(0);
 
+  describe('toNumberFromHex', ()=>{
+    test('should be correct number', ()=>{
+      expect(Web3Common.toNumberFromHex('0x01')).toBe(1);
+      expect(Web3Common.toNumberFromHex('0x0f')).toBe(15);
+      expect(Web3Common.toNumberFromHex('0x0F')).toBe(15);
+    })
+  });
+
+  describe('toHexString', ()=>{
+    test('should be correct hex', ()=>{
+      expect(Web3Common.toHexString(1)).toBe('0x01');
+      expect(Web3Common.toHexString(15)).toBe('0x0f');
+    })
+  });
+
   describe('jsonProvidersManager', ()=>{
     test('should use providers cache by default', async ()=>{
       expect(Web3Common.jsonProvidersManager.isUseCache()).toBe(true);

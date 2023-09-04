@@ -5,7 +5,7 @@
 
 import {Blockchains, abi, Network, Token, Currency, Assets} from 'smartypay-client-model';
 import {UseLogs} from './util';
-import {ethers} from 'ethers';
+import {BigNumber, ethers} from 'ethers';
 import {Web3Api} from './web3-api';
 import {JsonProvidersManager} from './util/JsonProvidersManager';
 import {TxReqProp} from './types';
@@ -53,14 +53,15 @@ export const Web3Common = {
     contractAddress: string,
     abi: any,
   ){
+    const walletAddress = await web3Api.getAddress();
     const provider = new ethers.providers.Web3Provider(web3Api.getRawProvider() as any);
-    return new ethers.Contract(contractAddress, abi, provider.getSigner());
+    return new ethers.Contract(contractAddress, abi, provider.getSigner(walletAddress));
   },
 
   async walletTokenApprove(
     web3Api: Web3Api,
     token: Token,
-    ownerAddress: string,
+    _ownerAddress: string, // deprecated: using "web3Api.getAddress()"
     spenderAddress: string,
     approveAbsoluteAmount: string,
     prop?: TxReqProp): Promise<string> {
@@ -69,8 +70,9 @@ export const Web3Common = {
 
     const {tokenId} = token;
 
+    const walletAddress = await web3Api.getAddress();
     const provider = new ethers.providers.Web3Provider(web3Api.getRawProvider() as any);
-    const contract = new ethers.Contract(tokenId, abi.Erc20ABI, provider.getSigner());
+    const contract = new ethers.Contract(tokenId, abi.Erc20ABI, provider.getSigner(walletAddress));
 
     // call tx
     const txResp = await contract.approve(spenderAddress, approveAbsoluteAmount);
@@ -150,10 +152,8 @@ export const Web3Common = {
     const token = (Assets as any)[currency] as Token|undefined;
     if(token){
       await this.addTokenToWallet(web3Api, token);
-    } else {
-      if(UseLogs.useLogs()){
-        console.log('cannot add unknown token', currency);
-      }
+    } else if(UseLogs.useLogs()){
+      console.log('cannot add unknown token', currency);
     }
   },
 
@@ -205,8 +205,20 @@ export const Web3Common = {
     return ethers.utils.parseUnits(amount, token.decimals);
   },
 
+  toBigNumber(value: any){
+    return BigNumber.from(value)
+  },
+
   toDecimalForm(amount: any, token: Token): string {
     return ethers.utils.formatUnits(amount, token.decimals);
+  },
+
+  toHexString(value: any): string {
+    return BigNumber.from(value).toHexString();
+  },
+
+  toNumberFromHex(value: string): number {
+    return BigNumber.from(value).toNumber();
   }
 
 }
