@@ -4,7 +4,7 @@
 */
 
 import {Web3Common} from './Web3Common';
-import {Assets} from 'smartypay-client-model';
+import { Assets, Blockchains } from 'smartypay-client-model';
 import {BigNumber, ethers} from 'ethers';
 
 describe('Web3Common', ()=>{
@@ -49,21 +49,21 @@ describe('Web3Common', ()=>{
       expect(absoluteForm.gt(zero)).toBe(true);
     });
 
-    test.skip('should support btUSDTv2', async ()=>{
+    test('should support btUSDTv2', async ()=>{
       const doubleForm = await Web3Common.getTokenBalance(Assets.btUSDTv2, address);
       const absoluteForm = ethers.utils.parseUnits(doubleForm, Assets.btUSDTv2.decimals);
       expect(absoluteForm.gt(zero)).toBe(true);
     });
 
-    test('should support atUSDC', async ()=>{
-      const doubleForm = await Web3Common.getTokenBalance(Assets.atUSDC, address);
-      const absoluteForm = ethers.utils.parseUnits(doubleForm, Assets.atUSDC.decimals);
+    test('should support asUSDC', async ()=>{
+      const doubleForm = await Web3Common.getTokenBalance(Assets.asUSDC, address);
+      const absoluteForm = ethers.utils.parseUnits(doubleForm, Assets.asUSDC.decimals);
       expect(absoluteForm.gt(zero)).toBe(true);
     });
 
-    test.skip('should support atUSDT', async ()=>{
-      const doubleForm = await Web3Common.getTokenBalance(Assets.atUSDT, address);
-      const absoluteForm = ethers.utils.parseUnits(doubleForm, Assets.atUSDT.decimals);
+    test('should support asUSDT', async ()=>{
+      const doubleForm = await Web3Common.getTokenBalance(Assets.asUSDT, address);
+      const absoluteForm = ethers.utils.parseUnits(doubleForm, Assets.asUSDT.decimals);
       expect(absoluteForm.gt(zero)).toBe(true);
     });
 
@@ -73,15 +73,15 @@ describe('Web3Common', ()=>{
       expect(absoluteForm.gt(zero)).toBe(true);
     });
 
-    test.skip('should support pmUSDT', async ()=>{
+    test('should support pmUSDT', async ()=>{
       const doubleForm = await Web3Common.getTokenBalance(Assets.pmUSDT, address);
       const absoluteForm = ethers.utils.parseUnits(doubleForm, Assets.pmUSDT.decimals);
       expect(absoluteForm.gt(zero)).toBe(true);
     });
 
-    test('should support gUSDC', async ()=>{
-      const doubleForm = await Web3Common.getTokenBalance(Assets.gUSDC, address);
-      const absoluteForm = ethers.utils.parseUnits(doubleForm, Assets.gUSDC.decimals);
+    test('should support sUSDC', async ()=> {
+      const doubleForm = await Web3Common.getTokenBalance(Assets.sUSDC, address);
+      const absoluteForm = ethers.utils.parseUnits(doubleForm, Assets.sUSDC.decimals);
       expect(absoluteForm.gt(zero)).toBe(true);
     });
   });
@@ -96,8 +96,8 @@ describe('Web3Common', ()=>{
     });
 
     test('should support atUSDC', async ()=>{
-      const doubleForm = await Web3Common.getTokenAllowance(Assets.atUSDC, address, randomAddress);
-      const absoluteForm = ethers.utils.parseUnits(doubleForm, Assets.atUSDC.decimals);
+      const doubleForm = await Web3Common.getTokenAllowance(Assets.asUSDC, address, randomAddress);
+      const absoluteForm = ethers.utils.parseUnits(doubleForm, Assets.asUSDC.decimals);
       expect(absoluteForm.eq(zero)).toBe(true);
     });
 
