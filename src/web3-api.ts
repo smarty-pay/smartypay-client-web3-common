@@ -3,47 +3,40 @@
   @author Evgeny Dolganov <evgenij.dolganov@gmail.com>
 */
 
-
-import {RawProvider} from './types';
-
+import type { RawProvider } from './types';
 
 export type Web3ApiEvent =
-  'wallet-connected'
+  | 'wallet-connected'
   | 'wallet-account-changed'
   | 'wallet-network-changed'
   | 'wallet-disconnected';
 
-
 export interface Web3Api {
+  addListener(event: Web3ApiEvent, listener: (...args: any[]) => void): void;
 
-  addListener(event:Web3ApiEvent, listener: (...args: any[])=>void): void,
+  removeListener(listener: (...args: any[]) => void): void;
 
-  removeListener(listener: (...args: any[])=>void): void,
+  name(): string;
 
-  name(): string,
+  hasWallet(): boolean;
 
-  hasWallet(): boolean,
+  isConnected(): boolean;
 
-  isConnected(): boolean,
+  connect(): Promise<void>;
 
-  connect(): Promise<void>,
+  getAddress(): Promise<string>;
 
-  getAddress(): Promise<string>,
+  getChainId(): Promise<number>;
 
-  getChainId(): Promise<number>,
+  getRawProvider(): RawProvider;
 
-  getRawProvider(): RawProvider,
-
-  disconnect(): Promise<void>,
+  disconnect(): Promise<void>;
 }
 
-
 export interface Web3ApiProvider {
+  name(): string;
 
-  name(): string,
+  hasWallet(): boolean;
 
-  hasWallet(): boolean,
-
-  makeWeb3Api(...args: any[]): Web3Api,
-
+  makeWeb3Api(...args: any[]): Web3Api;
 }

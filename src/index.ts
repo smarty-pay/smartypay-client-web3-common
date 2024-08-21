@@ -3,19 +3,11 @@
   @author Evgeny Dolganov <evgenij.dolganov@gmail.com>
 */
 
-import {RawProvider, TokenMaxAbsoluteAmount, TokenZeroAmount} from './types';
-import {Web3Common} from './Web3Common';
-import {
-  Web3Api,
-  Web3ApiEvent,
-  Web3ApiProvider,
-} from './web3-api';
+import { RawProvider, TokenMaxAbsoluteAmount, TokenZeroAmount } from './types';
 import * as wallet from './wallet-api';
-import {
-  storeLastWeb3ApiName,
-  getLastWeb3ApiName,
-  clearLastWeb3ApiName,
-} from './web3-api-history';
+import { Web3Api, Web3ApiEvent, Web3ApiProvider } from './web3-api';
+import { clearLastWeb3ApiName, getLastWeb3ApiName, storeLastWeb3ApiName } from './web3-api-history';
+import { Web3Common } from './Web3Common';
 
 export {
   RawProvider,
@@ -29,4 +21,4 @@ export {
   TokenMaxAbsoluteAmount,
   TokenZeroAmount,
   wallet,
-}
+};

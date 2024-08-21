@@ -6,12 +6,11 @@
 let useLogs = true;
 
 export const UseLogs = {
-
-  setUseLogs(val: boolean){
+  setUseLogs(val: boolean) {
     useLogs = val;
   },
 
-  useLogs(){
+  useLogs() {
     return useLogs;
   },
-}
+};
