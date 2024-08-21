@@ -3,17 +3,31 @@
   @author Evgeny Dolganov <evgenij.dolganov@gmail.com>
 */
 
-import { BigNumber, ethers } from 'ethers';
-import { abi, Assets, Blockchains } from 'smartypay-client-model';
+import { BrowserProvider, ethers } from 'ethers';
+import { abi, Assets, Blockchains, util } from 'smartypay-client-model';
 
 import { UseLogs } from './util';
 import { JsonProvidersManager } from './util/JsonProvidersManager';
 
 import type { TxReqProp } from './types';
 import type { Web3Api } from './web3-api';
+import type { BigNumberish } from 'ethers';
 import type { Currency, Network, Token } from 'smartypay-client-model';
 
 const DefaultTxConfirms = 1;
+
+let lazyCache: util.SimpleTtlCache<string, string>;
+
+function getLazyCache() {
+  if (!lazyCache) {
+    lazyCache = new util.SimpleTtlCache<string, string>();
+  }
+  return lazyCache;
+}
+
+interface GetTokenBalanceOpt {
+  cacheTtl?: number;
+}
 
 /**
  * Common API for all blockchains and wallets
@@ -23,16 +37,35 @@ export const Web3Common = {
 
   jsonProvidersManager: JsonProvidersManager,
 
-  async getTokenBalance(token: Token, ownerAddress: string): Promise<string> {
+  async getTokenBalance(token: Token, ownerAddress: string, opt?: GetTokenBalanceOpt): Promise<string> {
     const { network, tokenId, decimals } = token;
-    const { rpc } = Blockchains[network];
+    const cacheKey = `Web3Common_getTokenBalance_${ownerAddress}_${tokenId})`;
 
-    // readonly methods can be called without wallet
-    const provider = JsonProvidersManager.getProvider(rpc);
+    // multi-same calls will wait for a single result
+    return await util.withSingleCall(cacheKey, async () => {
+      const cache = getLazyCache();
+      const cached = cache.get(cacheKey);
 
-    const contract = new ethers.Contract(tokenId, abi.Erc20ABI, provider);
-    const balance = await contract.balanceOf(ownerAddress);
-    return ethers.utils.formatUnits(balance, decimals);
+      // no real call
+      if (cached) {
+        return cached;
+      }
+
+      // readonly methods can be called without wallet
+      const { rpc } = Blockchains[network];
+      const provider = JsonProvidersManager.getProvider(rpc);
+
+      const contract = new ethers.Contract(tokenId, abi.Erc20ABI, provider);
+      const balance: BigNumberish = await contract.balanceOf(ownerAddress);
+      const out = ethers.formatUnits(balance, decimals);
+
+      // save to cache if needed
+      if (opt?.cacheTtl && opt.cacheTtl > 0) {
+        cache.set(cacheKey, out, opt.cacheTtl);
+      }
+
+      return out;
+    });
   },
 
   async getTokenAllowance(token: Token, ownerAddress: string, spenderAddress: string): Promise<string> {
@@ -43,20 +76,20 @@ export const Web3Common = {
     const provider = JsonProvidersManager.getProvider(rpc);
 
     const contract = new ethers.Contract(tokenId, abi.Erc20ABI, provider);
-    const allowance = await contract.allowance(ownerAddress, spenderAddress);
-    return ethers.utils.formatUnits(allowance, decimals);
+    const allowance: BigNumberish = await contract.allowance(ownerAddress, spenderAddress);
+    return ethers.formatUnits(allowance, decimals);
   },
 
-  async getContractForWallet(web3Api: Web3Api, contractAddress: string, abi: any) {
-    const walletAddress = await web3Api.getAddress();
-    const provider = new ethers.providers.Web3Provider(web3Api.getRawProvider() as any);
-    return new ethers.Contract(contractAddress, abi, provider.getSigner(walletAddress));
+  async getContractForWallet(web3Api: Web3Api, contractAddress: string, abiDef: any) {
+    const provider = new BrowserProvider(web3Api.getRawProvider() as any);
+    const signer = await provider.getSigner();
+    return new ethers.Contract(contractAddress, abiDef, signer);
   },
 
   async walletTokenApprove(
     web3Api: Web3Api,
     token: Token,
-    _ownerAddress: string, // deprecated: using "web3Api.getAddress()"
+    ownerAddress: string,
     spenderAddress: string,
     approveAbsoluteAmount: string,
     prop?: TxReqProp,
@@ -65,16 +98,14 @@ export const Web3Common = {
 
     const { tokenId } = token;
 
-    const walletAddress = await web3Api.getAddress();
-    const provider = new ethers.providers.Web3Provider(web3Api.getRawProvider() as any);
-    const contract = new ethers.Contract(tokenId, abi.Erc20ABI, provider.getSigner(walletAddress));
+    const provider = new BrowserProvider(web3Api.getRawProvider() as any);
+    const signer = await provider.getSigner(ownerAddress);
+    const contract = new ethers.Contract(tokenId, abi.Erc20ABI, signer);
 
     // call tx
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const txResp = await contract.approve(spenderAddress, approveAbsoluteAmount);
-    const { transactionHash } = await txResp.wait(prop?.waitConfirms || DefaultTxConfirms);
-
-    return transactionHash;
+    const { hash } = await txResp.wait(prop?.waitConfirms ?? DefaultTxConfirms);
+    return hash;
   },
 
   async switchWalletToAssetNetwork(web3Api: Web3Api, token: Token) {
@@ -97,7 +128,6 @@ export const Web3Common = {
 
     // try to switch to existing network in wallet:
     try {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       const result = await provider.request({
         method: 'wallet_switchEthereumChain',
         params: [
@@ -113,7 +143,6 @@ export const Web3Common = {
       }
       return;
     } catch (e: any) {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access,@typescript-eslint/no-unsafe-call,@typescript-eslint/no-unsafe-assignment
       const msg: string = e.message || e.toString() || '';
 
       // no need to continue
@@ -123,7 +152,6 @@ export const Web3Common = {
     }
 
     // next: try to add network to wallet:
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const result = await provider.request({
       method: 'wallet_addEthereumChain',
       params: [
@@ -147,7 +175,6 @@ export const Web3Common = {
   },
 
   async addCurrencyTokenToWallet(web3Api: Web3Api, currency: Currency) {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
     const token = (Assets as any)[currency] as Token | undefined;
     if (token) {
       await this.addTokenToWallet(web3Api, token);
@@ -165,7 +192,6 @@ export const Web3Common = {
     try {
       await provider.request({
         method: 'wallet_watchAsset',
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         params: {
           type: 'ERC20',
           options: {
@@ -181,7 +207,6 @@ export const Web3Common = {
       }
     } catch (e: any) {
       if (UseLogs.useLogs()) {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access,@typescript-eslint/no-unsafe-call
         console.log('cannot add token', e.message || e.toString());
       }
     }
@@ -196,26 +221,26 @@ export const Web3Common = {
    * </pre>
    */
   getNormalAddress(address: string): string {
-    return ethers.utils.getAddress(address);
+    return ethers.getAddress(address);
   },
 
-  toAbsoluteForm(amount: string, token: Token) {
-    return ethers.utils.parseUnits(amount, token.decimals);
+  toAbsoluteForm(amount: string, token: Token): string {
+    return ethers.parseUnits(amount, token.decimals).toString();
   },
 
   toBigNumber(value: any) {
-    return BigNumber.from(value);
+    return util.bigMath.toBigNumber(value);
   },
 
   toDecimalForm(amount: any, token: Token): string {
-    return ethers.utils.formatUnits(amount, token.decimals);
+    return ethers.formatUnits(amount, token.decimals);
   },
 
   toHexString(value: any): string {
-    return BigNumber.from(value).toHexString();
+    return util.hex.toHexString(value);
   },
 
   toNumberFromHex(value: string): number {
-    return BigNumber.from(value).toNumber();
+    return util.hex.toNumberFromHex(value);
   },
 };
