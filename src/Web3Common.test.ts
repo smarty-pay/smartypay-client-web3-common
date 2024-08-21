@@ -3,111 +3,108 @@
   @author Evgeny Dolganov <evgenij.dolganov@gmail.com>
 */
 
-import {Web3Common} from './Web3Common';
-import { Assets, Blockchains } from 'smartypay-client-model';
-import {BigNumber, ethers} from 'ethers';
+import { Web3Common } from './Web3Common';
+import { Assets, util } from 'smartypay-client-model';
+import { ethers } from 'ethers';
 
-describe('Web3Common', ()=>{
-
+describe('Web3Common', () => {
   const address = '0x14186C8215985f33845722730c6382443Bf9EC65';
   const randomAddress = '0x790ACC251534cb02975A0c61dA94D200bB5833A5'; // from https://vanity-eth.tk/
 
-  const zero = BigNumber.from(0);
+  const zero = util.bigMath.toBigNumber(0);
 
-  describe('toNumberFromHex', ()=>{
-    test('should be correct number', ()=>{
+  describe('toNumberFromHex', () => {
+    test('should be correct number', () => {
       expect(Web3Common.toNumberFromHex('0x01')).toBe(1);
       expect(Web3Common.toNumberFromHex('0x0f')).toBe(15);
       expect(Web3Common.toNumberFromHex('0x0F')).toBe(15);
-    })
+    });
   });
 
-  describe('toHexString', ()=>{
-    test('should be correct hex', ()=>{
-      expect(Web3Common.toHexString(1)).toBe('0x01');
-      expect(Web3Common.toHexString(15)).toBe('0x0f');
-    })
+  describe('toHexString', () => {
+    test('should be correct hex', () => {
+      expect(Web3Common.toHexString(0)).toBe('0x0');
+      expect(Web3Common.toHexString(1)).toBe('0x1');
+      expect(Web3Common.toHexString(15)).toBe('0xf');
+      expect(Web3Common.toHexString(16)).toBe('0x10');
+      expect(Web3Common.toHexString(255)).toBe('0xff');
+      expect(Web3Common.toHexString(256)).toBe('0x100');
+    });
   });
 
-  describe('jsonProvidersManager', ()=>{
-    test('should use providers cache by default', async ()=>{
+  describe('jsonProvidersManager', () => {
+    test('should use providers cache by default', async () => {
       expect(Web3Common.jsonProvidersManager.isUseCache()).toBe(true);
     });
   });
 
-  describe('getTokenBalance', ()=>{
-
-    test('should support btBUSD', async ()=>{
+  describe('getTokenBalance', () => {
+    test('should support btBUSD', async () => {
       const doubleForm = await Web3Common.getTokenBalance(Assets.btBUSD, address);
-      const absoluteForm = ethers.utils.parseUnits(doubleForm, Assets.btBUSD.decimals);
-      expect(absoluteForm.gt(zero)).toBe(true);
+      const absoluteForm = ethers.parseUnits(doubleForm, Assets.btBUSD.decimals);
+      expect(util.bigMath.isGreaterThan(absoluteForm, zero)).toBe(true);
     });
 
-    test('should support btMNXe', async ()=>{
+    test('should support btMNXe', async () => {
       const doubleForm = await Web3Common.getTokenBalance(Assets.btMNXe, address);
-      const absoluteForm = ethers.utils.parseUnits(doubleForm, Assets.btMNXe.decimals);
-      expect(absoluteForm.gt(zero)).toBe(true);
+      const absoluteForm = ethers.parseUnits(doubleForm, Assets.btMNXe.decimals);
+      expect(util.bigMath.isGreaterThan(absoluteForm, zero)).toBe(true);
     });
 
-    test('should support btUSDTv2', async ()=>{
+    test('should support btUSDTv2', async () => {
       const doubleForm = await Web3Common.getTokenBalance(Assets.btUSDTv2, address);
-      const absoluteForm = ethers.utils.parseUnits(doubleForm, Assets.btUSDTv2.decimals);
-      expect(absoluteForm.gt(zero)).toBe(true);
+      const absoluteForm = ethers.parseUnits(doubleForm, Assets.btUSDTv2.decimals);
+      expect(util.bigMath.isGreaterThan(absoluteForm, zero)).toBe(true);
     });
 
-    test('should support asUSDC', async ()=>{
+    test('should support asUSDC', async () => {
       const doubleForm = await Web3Common.getTokenBalance(Assets.asUSDC, address);
-      const absoluteForm = ethers.utils.parseUnits(doubleForm, Assets.asUSDC.decimals);
-      expect(absoluteForm.gt(zero)).toBe(true);
+      const absoluteForm = ethers.parseUnits(doubleForm, Assets.asUSDC.decimals);
+      expect(util.bigMath.isGreaterThan(absoluteForm, zero)).toBe(true);
     });
 
-    test('should support asUSDT', async ()=>{
+    test('should support asUSDT', async () => {
       const doubleForm = await Web3Common.getTokenBalance(Assets.asUSDT, address);
-      const absoluteForm = ethers.utils.parseUnits(doubleForm, Assets.asUSDT.decimals);
-      expect(absoluteForm.gt(zero)).toBe(true);
+      const absoluteForm = ethers.parseUnits(doubleForm, Assets.asUSDT.decimals);
+      expect(util.bigMath.isGreaterThan(absoluteForm, zero)).toBe(true);
     });
 
-    test('should support pmUSDC', async ()=>{
-      const doubleForm = await Web3Common.getTokenBalance(Assets.pmUSDC, address);
-      const absoluteForm = ethers.utils.parseUnits(doubleForm, Assets.pmUSDC.decimals);
-      expect(absoluteForm.gt(zero)).toBe(true);
+    test('should support paUSDC', async () => {
+      const doubleForm = await Web3Common.getTokenBalance(Assets.paUSDC, address);
+      const absoluteForm = ethers.parseUnits(doubleForm, Assets.paUSDC.decimals);
+      expect(util.bigMath.isGreaterThan(absoluteForm, zero)).toBe(true);
     });
 
-    test('should support pmUSDT', async ()=>{
-      const doubleForm = await Web3Common.getTokenBalance(Assets.pmUSDT, address);
-      const absoluteForm = ethers.utils.parseUnits(doubleForm, Assets.pmUSDT.decimals);
-      expect(absoluteForm.gt(zero)).toBe(true);
+    test('should support paUSDT', async () => {
+      const doubleForm = await Web3Common.getTokenBalance(Assets.paUSDT, address);
+      const absoluteForm = ethers.parseUnits(doubleForm, Assets.paUSDT.decimals);
+      expect(util.bigMath.isGreaterThan(absoluteForm, zero)).toBe(true);
     });
 
-    test('should support sUSDC', async ()=> {
+    test('should support sUSDC', async () => {
       const doubleForm = await Web3Common.getTokenBalance(Assets.sUSDC, address);
-      const absoluteForm = ethers.utils.parseUnits(doubleForm, Assets.sUSDC.decimals);
-      expect(absoluteForm.gt(zero)).toBe(true);
+      const absoluteForm = ethers.parseUnits(doubleForm, Assets.sUSDC.decimals);
+      expect(util.bigMath.isGreaterThan(absoluteForm, zero)).toBe(true);
     });
   });
 
-
-  describe('getTokenAllowance', ()=>{
-
-    test('should support btBUSD', async ()=>{
+  describe('getTokenAllowance', () => {
+    test('should support btBUSD', async () => {
       const doubleForm = await Web3Common.getTokenAllowance(Assets.btBUSD, address, randomAddress);
-      const absoluteForm = ethers.utils.parseUnits(doubleForm, Assets.btBUSD.decimals);
-      expect(absoluteForm.eq(zero)).toBe(true);
+      const absoluteForm = ethers.parseUnits(doubleForm, Assets.btBUSD.decimals);
+      expect(util.bigMath.isEqualTo(absoluteForm, zero)).toBe(true);
     });
 
-    test('should support atUSDC', async ()=>{
+    test('should support atUSDC', async () => {
       const doubleForm = await Web3Common.getTokenAllowance(Assets.asUSDC, address, randomAddress);
-      const absoluteForm = ethers.utils.parseUnits(doubleForm, Assets.asUSDC.decimals);
-      expect(absoluteForm.eq(zero)).toBe(true);
+      const absoluteForm = ethers.parseUnits(doubleForm, Assets.asUSDC.decimals);
+      expect(util.bigMath.isEqualTo(absoluteForm, zero)).toBe(true);
     });
 
-    test('should support pmUSDC', async ()=>{
-      const doubleForm = await Web3Common.getTokenAllowance(Assets.pmUSDC, address, randomAddress);
-      const absoluteForm = ethers.utils.parseUnits(doubleForm, Assets.pmUSDC.decimals);
-      expect(absoluteForm.eq(zero)).toBe(true);
+    test('should support paUSDC', async () => {
+      const doubleForm = await Web3Common.getTokenAllowance(Assets.paUSDC, address, randomAddress);
+      const absoluteForm = ethers.parseUnits(doubleForm, Assets.paUSDC.decimals);
+      expect(util.bigMath.isEqualTo(absoluteForm, zero)).toBe(true);
     });
   });
-
-})
-
-
+});

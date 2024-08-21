@@ -10,9 +10,8 @@ export interface RawProvider {
   /**
    * Sends a raw request by wallet's raw provider itself
    */
-  request(options: SendOptions): Promise<any>,
+  request(options: SendOptions): Promise<any>;
 }
-
 
 export interface SendOptions {
   method: string;
@@ -21,7 +20,6 @@ export interface SendOptions {
   jsonrpc?: string;
 }
 
-
 export interface TxReqProp {
-  waitConfirms?: number
+  waitConfirms?: number;
 }

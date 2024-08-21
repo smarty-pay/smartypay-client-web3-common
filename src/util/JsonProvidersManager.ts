@@ -1,40 +1,37 @@
-import {ethers} from 'ethers';
+import { ethers } from 'ethers';
 
 let useCache = true;
-const cache = new Map<string, ethers.providers.JsonRpcProvider>();
+const cache = new Map<string, ethers.JsonRpcProvider>();
 
 export const JsonProvidersManager = {
-
-  getProvider(rpc: string): ethers.providers.JsonRpcProvider {
-
+  getProvider(rpc: string): ethers.JsonRpcProvider {
     // from cache
-    const fromCache = useCache? cache.get(rpc) : undefined;
-    if(fromCache)
-      return fromCache;
+    const fromCache = useCache ? cache.get(rpc) : undefined;
+    if (fromCache) return fromCache;
 
     // new
-    const provider = new ethers.providers.JsonRpcProvider(rpc);
+    const provider = new ethers.JsonRpcProvider(rpc);
 
     // store in cache if needed
-    if(useCache){
+    if (useCache) {
       cache.set(rpc, provider);
     }
 
     return provider;
   },
 
-  isUseCache(){
+  isUseCache() {
     return useCache;
   },
 
-  setUseCache(value: boolean){
+  setUseCache(value: boolean) {
     useCache = value;
-    if( ! useCache){
+    if (!useCache) {
       JsonProvidersManager.clearProvidersCache();
     }
   },
 
-  clearProvidersCache(){
+  clearProvidersCache() {
     cache.clear();
-  }
-}
+  },
+};

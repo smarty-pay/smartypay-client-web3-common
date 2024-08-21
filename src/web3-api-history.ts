@@ -5,10 +5,10 @@
 
 const StoreKey = 'smartypay-last-connected-wallet';
 
-export function storeLastWeb3ApiName(name: string){
+export function storeLastWeb3ApiName(name: string) {
   try {
     window.localStorage.setItem(StoreKey, name);
-  } catch (e){
+  } catch (e) {
     // ignore
   }
 }
@@ -16,16 +16,15 @@ export function storeLastWeb3ApiName(name: string){
 export function getLastWeb3ApiName(): string {
   try {
     return window.localStorage.getItem(StoreKey) || '';
-  } catch (e){
+  } catch (e) {
     return '';
   }
 }
 
-
-export function clearLastWeb3ApiName(){
+export function clearLastWeb3ApiName() {
   try {
     window.localStorage.setItem(StoreKey, '');
-  } catch (e){
+  } catch (e) {
     // ignore
   }
 }
