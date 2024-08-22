@@ -13,7 +13,8 @@
   "main": "./dist/esbuild/index.js",
   "types": "./dist/tsc/index.d.ts",
   "scripts": {
-    "lint": "eslint src/ --ext .js,.jsx,.ts,.tsx",
+    "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
+    "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "test": "jest --passWithNoTests",
     "clean": "rm -rf dist build package",
     "docs": "typedoc --entryPoints src/index.ts",
