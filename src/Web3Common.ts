@@ -196,7 +196,7 @@ export const Web3Common = {
           type: 'ERC20',
           options: {
             address: token.tokenId,
-            symbol: token.abbr,
+            symbol: token.symbol ?? token.abbr,
             decimals: token.decimals,
           },
         } as any,
