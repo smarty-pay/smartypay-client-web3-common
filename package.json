@@ -1,7 +1,7 @@
 {
   "name": "smartypay-client-web3-common",
-  "version": "2.36.1",
-  "description": "Common classes for supporting web3 with SmartyPay api",
+  "version": "2.36.2",
+  "description": "Common classes for supporting web3 with Smarty Pay api",
   "author": "Evgeny Dolganov <evgenij.dolganov@gmail.com>",
   "repository": "https://github.com/smarty-pay/smartypay-client-web3-common",
   "license": "MIT",
@@ -23,7 +23,7 @@
   },
   "dependencies": {
     "ethers": "^6.13.2",
-    "smartypay-client-model": "^2.36.1"
+    "smartypay-client-model": "^2.36.2"
   },
   "devDependencies": {
     "@types/jest": "^29.5.12",

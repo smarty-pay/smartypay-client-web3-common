@@ -1,5 +1,5 @@
 /*
-  SMARTy Pay Client Web3 Common
+  Smarty Pay Client Web3 Common
   @author Evgeny Dolganov <evgenij.dolganov@gmail.com>
 */
 

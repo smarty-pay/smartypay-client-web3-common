@@ -1,3 +1,8 @@
+/*
+  Smarty Pay Client Web3 Common
+  @author Evgeny Dolganov <evgenij.dolganov@gmail.com>
+*/
+
 import { ethers } from 'ethers';
 
 let useCache = true;
