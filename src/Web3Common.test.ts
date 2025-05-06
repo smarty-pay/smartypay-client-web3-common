@@ -81,9 +81,9 @@ describe('Web3Common', () => {
       expect(util.bigMath.isGreaterThan(absoluteForm, zero)).toBe(true);
     });
 
-    test('should support sUSDC', async () => {
-      const doubleForm = await Web3Common.getTokenBalance(Assets.sUSDC, address);
-      const absoluteForm = ethers.parseUnits(doubleForm, Assets.sUSDC.decimals);
+    test('should support esUSDC', async () => {
+      const doubleForm = await Web3Common.getTokenBalance(Assets.esUSDC, address);
+      const absoluteForm = ethers.parseUnits(doubleForm, Assets.esUSDC.decimals);
       expect(util.bigMath.isGreaterThan(absoluteForm, zero)).toBe(true);
     });
   });
